@@ -4,8 +4,8 @@
 
 ## 工作方式
 
-GitHub Actions 每 2 小时自动运行一次抓取脚本，把最新新闻写入 `news.json` 并提交，
-GitHub Pages 随即自动重新发布页面。电脑关机也照常更新。
+GitHub Actions 每 2 小时自动运行一次抓取脚本，把最新新闻写入 `news.json`，
+并在同一次运行中直接把页面部署到 GitHub Pages。电脑关机也照常更新。
 
 ## 项目结构
 

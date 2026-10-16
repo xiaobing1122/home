@@ -2,16 +2,25 @@ name: 更新财经快讯
 
 on:
   schedule:
-    # GitHub 使用 UTC 时间，0 */2 * * * 即北京时间每偶数整点（8:00、10:00 …）
+    # GitHub 使用 UTC 时间；0 */2 * * * 即北京时间 8:00、10:00、12:00 … 每 2 小时一次
     - cron: '0 */2 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   update:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -22,7 +31,7 @@ jobs:
       - name: 抓取新闻
         run: node scripts/fetch-news.mjs
 
-      - name: 提交更新
+      - name: 提交数据更新（保留历史记录）
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -33,3 +42,18 @@ jobs:
           fi
           git commit -m "chore: 自动更新新闻 $(date -u +'%F %T') UTC"
           git push
+
+      - name: 准备站点文件
+        run: |
+          mkdir _site
+          cp index.html app.js styles.css news.json _site/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: 部署到 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
