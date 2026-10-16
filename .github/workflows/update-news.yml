@@ -1,0 +1,35 @@
+name: 更新财经快讯
+
+on:
+  schedule:
+    # GitHub 使用 UTC 时间，0 */2 * * * 即北京时间每偶数整点（8:00、10:00 …）
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: 抓取新闻
+        run: node scripts/fetch-news.mjs
+
+      - name: 提交更新
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add news.json
+          if git diff --cached --quiet; then
+            echo "内容无变化，跳过提交"
+            exit 0
+          fi
+          git commit -m "chore: 自动更新新闻 $(date -u +'%F %T') UTC"
+          git push

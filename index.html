@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>财经快讯</title>
+<link rel="icon" href="data:," />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <div class="title-row">
+      <h1>财经快讯</h1>
+      <span id="updated" class="updated">加载中…</span>
+      <button id="refresh" class="refresh-btn" type="button">刷新</button>
+    </div>
+    <nav id="filters" class="filters"></nav>
+  </div>
+</header>
+<main class="wrap">
+  <ul id="news-list" class="news-list"></ul>
+  <div id="empty" class="empty" hidden>暂无新闻，等待下一次更新</div>
+</main>
+<footer class="site-footer wrap">
+  <p>数据来源：华尔街见闻 · 东方财富 · 金十数据｜点击标题跳转原文</p>
+  <p>页面由定时任务自动更新</p>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>
